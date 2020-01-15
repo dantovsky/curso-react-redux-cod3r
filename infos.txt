@@ -1,0 +1,133 @@
+﻿19:35 09/01/2020
+
+Requisitos:
+- MongoDB Community Server (v3.4 usado no curso) :: https://www.mongodb.com/download-center/community
+- NodeJS (v 6.10.0 usado no curso) :: https://nodejs.org/en/
+- cmder
+- Visual Studio Code
+- Git
+
+Sobre o React
+O React é um framework com foco muito forte na View e na questão dos componentes e na relação entre os componentes, ou seja, não está preocupado com:
+- requisições de HTTP Client para fazer requisições AJAX
+- gerenciamento de estado da app (embora tenha recursos que ajudam nisso)
+
+-------------------------------------------------------
+Rodar código
+-------------------------------------------------------
+
+- npm run dev
+
+Exemplo: nas pastas 
+F:\Dropbox\Dantiii\Cursos\Udemy\react\curso-react-redux\my-money-app\frontend
+e
+F:\Dropbox\Dantiii\Cursos\Udemy\react\curso-react-redux\my-money-app\backend
+
+Fazer o comando:
+- npm i (para instalar as dependências
+
+Depois rodar dentro das duas pastas o comando:
+- npm run dev
+
+Aceder no browser, o endereço:
+- http://localhost:8080/
+
+
+-------------------------------------------------------
+Configugar e Rodar Aplicação React
+-------------------------------------------------------
+
+Config ::
+
+Usar o pacote "create-react-app" => pacote que ajuda a criar e configurar uma app React de forma automatizada
+Primeiro devemos instalar o pacote no nosso sistema:
+
+- npm install -g create-react-app
+
+Para iniciar uma nova app React:
+- create-react-app nome-app
+
+Rodar ::
+
+Dentro da pasta raiz da nova app, rodar o comando:
+- npm start
+
+A app será iniciada no seguinte local:
+  Local:            http://localhost:3000/
+  On Your Network:  http://192.168.1.67:3000/
+
+
+-------------------------------------------------------
+JSX
+-------------------------------------------------------
+
+// JSX :: é uma sitaxe, parecida com HTML, que é convertido para código JS.
+// Comparação de método manual vs JS para a criação de uma lista com elementos:
+
+// Exemplo para criação de uma lista com JSX
+const elemento = document.getElementById('root')
+ReactDOM.render(
+    <ul>
+        <li>Um</li>
+        <li>Dois</li>
+        <li>Três</li>
+    </ul>
+    , elemento)
+
+// Método para criar uma lista com elementos em JS puro:
+let lista = document.createElement('ul')
+
+let item = document.createElement('li')
+let texto = document.createTextNode('João')
+item.appendChild(texto)
+lista.appendChild(item)
+
+let item = document.createElement('li')
+let texto = document.createTextNode('Maria')
+item.appendChild(texto)
+lista.appendChild(item)
+
+const elemento = document.getElementById('root')
+
+
+-------------------------------------------------------
+Aulas 11, 12, 13 - Componentes
+-------------------------------------------------------
+
+Permite organizar uma app baseado nos conceitos da app => Criar componentes para a aplicação, ou seja, pedaços isolados da app, contendo seu próprio escopo: comportamentos com JS, estrutura HTML com o uso do JSX e CSS.
+Então, passamos a ter uma app com pequenos componentes, um colaborando com o outro.
+
+Antigamente o código era separado baseado nas tecnologias e hoje tudo isso está junto dentro de um componente.
+
+Existem 2 tipos de componentes:
+- baseados em função
+- baseados em classe
+
+# Coponente baseado em função
+- Ficheiro componentes/PrimeiroComponente.jsx
+
+import React from 'react'
+
+function primeiro() {
+    return <h1>Primeiro Componente!</h1>
+}
+
+export default primeiro
+
+- Pode ser também exportado como uma função anônima:
+
+import React from 'react'
+
+export default function () {
+    return <h1>Primeiro Componente!</h1>
+}
+
+- No ficheiro onde vai ser utilizado o componente deverá fazer o import e depois colocar a tag do componente no local a ser usado.
+import PrimeiroComponente from './componentes/PrimeiroComponente'
+...
+ReactDOM.render(
+    <div>
+        <PrimeiroComponente></PrimeiroComponente>
+        <PrimeiroComponente /> {/* Outra forma de chamar a tag de um componente */}
+    </div>
+, elemento)
