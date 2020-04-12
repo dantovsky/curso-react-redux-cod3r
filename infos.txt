@@ -131,3 +131,418 @@ ReactDOM.render(
         <PrimeiroComponente /> {/* Outra forma de chamar a tag de um componente */}
     </div>
 , elemento)
+
+
+-------------------------------------------------------
+Aula 14 - Usando props
+-------------------------------------------------------
+
+Passa-se um parametro "props" para a função
+Pode acessar com {props.valor}
+Na component (tag do componente) enviar o valor: <MeuComponente valor=""Bom dia!" />
+
+
+
+-------------------------------------------------------
+Aula 15 - Retornar múltiplos elementos
+-------------------------------------------------------
+Soluções para retornar múltiplos elementos adjacentes (um ao lado do outro)
+
+// Solução 03. Retornar um array de elementos
+export default props => [
+    <h1>Paarte 1</h1>,
+    <h1> Parte 2</h1>
+]
+
+// Solução 02. No HTML gerado não heverá nenhuma tag a envolver os elementos "Parte 1" e "Parte 2" 
+export default props =>
+    <React.Fragment>
+        <h1>Paarte 1</h1>
+        <h1>Paarte 2</h1>
+    </React.Fragment>
+
+// Solução 01. Mais usada!
+export default props =>
+    <div>
+        <h1>Paarte 1</h1>
+        <h1>Paarte 2</h1>
+    </div>
+
+-------------------------------------------------------
+Aula 18 e 19 - Relacao entre componentes
+-------------------------------------------------------
+
+// --- indes.js
+
+<h3>Realção entre componentes #01</h3>
+        <FamiliaSilva />
+
+        <hr />
+
+        <h3>Realção entre componentes #02</h3>
+        <Familia>
+            <Membro nome="Andre" sobrenome="Pereira" />
+            <Membro nome="Mariana" sobrenome="Pereira" />
+        </Familia>
+
+        <Familia>
+            <Membro nome="Bia" sobrenome="Aruda" saudacao="Oi!" />
+            <Membro nome="Gustavo" sobrenome="Aruda" />
+        </Familia>
+
+// --- FamiliaSilva
+
+import React from 'react' // precisa deste import pora usar o JSX
+import Membro from './Membro' // Membro.jsx será uma dependencia do componente FamiliaSilva.jsx
+
+export default props =>
+<div>
+    {/* Criacao de 4 instancias do componente Membro */}
+    <Membro nome="Rafael" sobrenome="Silva"/>
+    <Membro nome="Daniela" sobrenome="Silva"/>
+    <Membro nome="Pedro" sobrenome="Silva"/>
+    <Membro nome="Ana" sobrenome="Silva"/>
+</div>
+
+// --- Familia
+
+import React from 'react'
+
+export default props =>
+    <div>
+        <h1>Família</h1>
+        {props.children} {/* Aqui estarao todos os componentes filhos do componente Familia */}
+    </div>
+
+
+-------------------------------------------------------
+Aula 20 - Relacao direta entre componentes
+-------------------------------------------------------
+Objetivo: fazer com que uma propriedade de um elemento pai se propague para os elementos filhos.
+
+// --- index.js
+
+<h3>Comunicação direta entre componentes</h3>
+        <FamiliaSilva sobrenome="Silva Pereira">
+            <Membro nome="Bia" />
+            <Membro nome="Gustavo" />
+        </FamiliaSilva>
+
+// --- FamiliaSilva.jsx
+
+import React from 'react'
+import Membro from './Membro'
+
+export default props =>
+<div>
+    <h2>Família com sobrenome passado como parametro</h2>
+    <p>Forma poderosa e simples de passar patametros de um componente pai para um componente filho</p>
+    <Membro nome="Ana" sobrenome={props.sobrenome}/>
+    <Membro nome="Diana" sobrenome={props.sobrenome}/>
+    <Membro nome="Adriana" sobrenome={props.sobrenome}/>
+</div>
+
+
+-------------------------------------------------------
+Aula 21 - Propagando "props" para componentes filhos #01
+-------------------------------------------------------
+
+Método cloneElement() para clonar os "filhos" que a funcao recebeu , podendo passar propriedades para esses clones gerados.
+Porém só permite que tenha um componente "Membro" filho.
+
+// --- index.js
+
+<Familia sobrenome="Pereira">
+    <Membro nome="Andre" />
+</Familia>
+
+// --- Familia.jsx
+
+import React from 'react'
+
+export default props =>
+    <div>
+        <h1>Família</h1>
+
+        {/* Passa todas as propriedades de uma vez por um clone, utilizando o operador spread { ...props } */}
+        {React.cloneElement(props.children, { ...props })}
+
+        {/* Passa todas as propriedades de uma vez pera referencia "props"
+        {React.cloneElement(props.children, props)} */}
+            
+        {/* Propagando "props" para componentes filhos (maneira 1) */}
+        {/* {React.cloneElement(props.children,
+            {sobrenome: props.sobrenome })} */}
+    </div>
+
+
+-------------------------------------------------------
+Aula 22 - Propagando "props" para componentes filhos #02
+-------------------------------------------------------
+Ao tentar compartilhar a propriedade do componente pai com mais de um filho, obtem o erro:
+"Element type is invalid: expected a string(for built-in components) or..."
+Isto acontece porque precisa percorrer um elemento por vez e clonar cada um. => Usar a função map()
+
+No React existe uma versão da funcao map(). => {React.Children.map()}
+
+// --- index.js (completo)
+
+import React from 'react' // needs this import to run JSX
+import ReactDOM from 'react-dom'
+import Familia from './componentes/Familia'
+import Membro from './componentes/Membro'
+
+const elemento = document.getElementById('root')
+ReactDOM.render(
+    <div>
+        <Familia sobrenome="Pereira">
+            <Membro nome="Andre" />
+            <Membro nome="Dante" />
+            <Membro nome="Diana" />
+        </Familia>
+    </div>
+, elemento)  
+
+// --- Familia.jsx
+
+import React from 'react'
+export default props =>
+    <div>
+        {React.Children.map(props.children, filho => {
+            return React.cloneElement(filho, { ...props })
+        })}
+    </div>
+
+Obs: também podemos colocar a funcao map() numa funcao de utilidde global, ex: utils.jsx
+
+
+-------------------------------------------------------
+Aula 23 - Adicionando funcao em um componente funcional
+-------------------------------------------------------
+
+Alguns conceitos básicos de componente funcional:
+- quando usa arrow function pode eliminar as chavetas {} e o return dentro dela, caso esteja retornando apenas um elemento.
+- quando utiliza function com {} precisa explicitamente usar o "return".
+
+O componente funcional é um componente sem estado (stateless)
+(!) A partir do React 16.8 um componente Funcional pode ter estado.
+
+// --- indes.js
+
+import ComponenteComFuncao from './componentes/ComponenteComFuncao'
+...
+<ComponenteComFuncao />
+
+// --- ComponenteComFuncao
+
+import React from 'react'
+
+export default props => {
+    const aprovados = ['Paula', 'Roberta', 'Gustavo', 'Julia']
+
+    // Receber os itens e transformá-los em elementos do tipo JSX
+    const gerarItens = itens => {
+        // Funcao map() transforma elementos do Array em outros elementos
+        return itens.map(item => <li>{item}</li>)
+    }
+
+    // Retornando uma expressao
+    return (
+        <ul>
+            {gerarItens(aprovados)}
+        </ul>
+    )
+}
+
+
+-------------------------------------------------------
+Aula 24 - Comunicacao indireta entre componentes
+-------------------------------------------------------
+
+// --- indes.js
+
+import Pai from './componentes/Pai'
+...
+<Pai />
+
+// --- Pai.jsx
+
+import React from 'react'
+import Filho from './Filho'
+
+export default props => {
+    const notificarSaidaDoFilho = lugar => alert(`Liberado para ${lugar}`)
+    return (
+        <div>
+            <Filho notificarSaida={notificarSaidaDoFilho} />
+        </div>
+    )
+}
+
+// --- Filho.jsx
+
+import React from 'react'
+
+// O filho vai receber uma funcao como param através do props, e esta funcao podera ser chamada passando algum valor
+export default props =>
+    <div>
+        <p>Etse botao será chamado sempre que o componente filho for avisar para o componente pai, que vai sair. E passa pro pai a dizer qual é o local que vai sair.</p>
+        <p>O comp pai passa uma funcao via props, e no filho quando acontecer um evento, essa funcao é chamada de volta notificando o pai.</p>
+        <button
+            onClick={() => props.notificarSaida('praia')}>
+            Vou Sair
+        </button>
+
+        {/* Se quisesse enviar um objeto com várias infos, no lugar da string, basta fazer:
+        onClick={() => props.notificarSaida({"lugar": 'praia', "hora": 15})}>
+        E no pai, basta aceder com "data.lugar" e "data.hora". */}
+    </div>
+
+    
+-------------------------------------------------------
+Aula 25 - Componente de classe
+-------------------------------------------------------
+Numa classe, podemos aceder aos props através do "this".
+
+// --- indes.js
+
+import Pai from './componentes/ComponenteClasse'
+...
+<ComponenteClasse />
+
+// --- ComponenteClasse.jsx
+
+import React, { Component } from 'react'
+
+export default class ComponenteClasse extends Component {
+    render() {
+        return (
+        <h1>{this.props.valor || 'Valor pardão'}</h1>
+        )
+    }
+}
+
+// Outra opção seria referenciar com React.Component:
+/*
+import React from from 'react'
+export default class ComponenteClasse extends React.Component {}
+*/
+
+
+-------------------------------------------------------
+Aula 27 - Componente de Classe Contador
+-------------------------------------------------------
+
+Um componente baseado em classe obrigatoriamente precisa ter o método render(), 
+que vai ser o método responsável por renderizar o o componente. Um método funcional, a própria função
+já é responsável por renderizar, porque o React espera que o retorno de um componente funcional 
+sejo o JSX, e  no caso de um componente baseado em classe, ele vai chamar a função render().
+
+Aula 28 - Problema do this
+O this pode variar de acordo com quem chama a função. O this, numa função tradicional do JavaScript, 
+não está relacionado ao local que a função foi escrita, mas sim, quem está chamando a função.
+
+No caso do programa Contador, quem está chamando a função é o browser, a partir do evento do click.
+
+// --- Soluções para conseguir usar o this em toda a classe
+
+// Solução 01 :: bind(this) da função no construtor da classe
+constructor(props) {
+    super(props)
+    this.maisUm = this.maisUm.bind(this)
+}
+
+// Solução 02 :: Uso de arrow function no onClick (ela garante que o this será associado ao local que a função foi escrita)
+A partir do ECMAScript 2015 surgiu a funcao arrow, e ela trata o this associado ao contexto léxico
+<button onClick={() => this.maisUm()}>Inc</button>
+
+// Solução 03 :: Transformar a função maisUm() numa variável que recebe uma arrow function
+maisUm = () => {
+    //this.state.numero++
+    console.log(this)
+}
+
+(!) Tudo o que se recebe via propriedade não pode ser mudado, ou seja, é "ready only".
+Logo, não é possível alterar um valor do props. Para isso, devemos utilizar estado, conseguindo assim, modifincar algo dentro do componente.
+
+
+// --- index.js
+
+<Contador numeroInicial={10} />
+
+// --- Contador.jsx
+
+import React, { Component } from 'react'
+
+export default class Contador extends Component {
+
+    // Inicializa o estado do componente (poder feito diretamente na classe ou no construtor)
+    state = {
+        numero: this.props.numeroInicial
+    }
+
+    // Uso de arrwo function para que o this funcione corretamente no contexto da classe.
+    maisUm = () => {
+        this.setState({ numero: this.state.numero + 1 })
+        console.log(this)
+    }
+
+    menosUm = () => {
+        this.setState({ numero: this.state.numero - 1 })
+    }
+
+    // Única funcao para realizar as duas operações de adicao e subtracao
+    alterarNumero = diferenca => {
+        this.setState({
+            numero: this.state.numero + diferenca
+        })
+    }
+
+    render() {
+        return (
+            <div>
+                <div>Número: {this.state.numero}</div>
+                {/* O botão abaixo passa a referência da função e não a chamada da função */}
+                <button onClick={this.maisUm}>Inc</button>
+                <button onClick={this.menosUm}>Dec</button>
+                
+                <button onClick={() => this.alterarNumero(10)}>Inc 10</button>
+                <button onClick={() => this.alterarNumero(-10)}>Dec 10</button>
+            </div>
+        )
+    }
+}
+
+
+-------------------------------------------------------
+Aula 31 - React Hooks
+-------------------------------------------------------
+
+A partir da versão 16.8 do React, é possível alterar o estado dos componentes funcionais (feitos com função), 
+utilizando para isso, os Hooks.
+
+// --- index.js
+
+ <Hook />
+
+// --- Hook.jsx
+
+import React, { useState } from 'react'
+
+// A partir do useState podemos instanciar um estado e temos disponível um método set
+// O useState tem 2 campos (valor, método para alterar o valor)
+// Podemos tanto usar um método de desestruturacao para receber os campos do useState,
+// como também, associar o useState a uma variável e aceder aos índices desta var
+
+export default props => {
+    // Usando desestruturador: [var, funcao para alterar a var]
+    const [contador, setContador] = useState(0)
+    return (
+        <div>
+            <h1>{contador}</h1>
+            <button onClick={() => setContador(contador + 1)}>Inc</button>
+        </div>
+    )
+}
+
+Outro uso importante dos Hooks é para aceder aos métodos do ciclo de vida do componente.
