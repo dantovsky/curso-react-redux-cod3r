@@ -144,7 +144,7 @@ Na component (tag do componente) enviar o valor: <MeuComponente valor=""Bom dia!
 
 
 -------------------------------------------------------
-Aula 15 - Retornar múltiplos elementos
+Aula 15 - React.Fragment: Retornar elementos adjacentes
 -------------------------------------------------------
 Soluções para retornar múltiplos elementos adjacentes (um ao lado do outro)
 
@@ -161,6 +161,13 @@ export default props =>
         <h1>Paarte 2</h1>
     </React.Fragment>
 
+    Uma forma reduzida de usar o React.Fragment é usar somente <>, mas desta forma nao pode passar atributo nesta tag do "Fragment", caso necessite.
+    <>
+        <h1>Paarte 1</h1>
+        <h1>Paarte 2</h1>
+    </>
+
+
 // Solução 01. Mais usada!
 export default props =>
     <div>
@@ -169,7 +176,52 @@ export default props =>
     </div>
 
 -------------------------------------------------------
-Aula 18 e 19 - Relacao entre componentes
+Aula 16 - Componente App e Arrow Functions (curso novo)
+-------------------------------------------------------
+Opções de como exportar uma função num componente.
+
+(opção 1) :: Usar "export default" retornando função nomeada ou anônima
+
+// forma 1
+export default function myFunction() {
+    return (...)
+}
+
+// forma 2
+export default function() {
+    return (...)
+}
+
+(opção 3) :: Usar "export function" para retornar funcao anonima utilizando a sintaxe de arrow function
+
+// sem passar parametros
+export function () =>  {
+    return (...)
+}
+
+// passando um param
+export function props =>  {
+    return (...)
+}
+
+// outra maneira para simbolizar a passagem de apenas um param (_)
+export function _ =>  {
+    return (...)
+}
+
+// também assim entre parenteses
+export function (_) =>  {
+    return (...)
+}
+
+(opção 4) :: Podemos remover o corpo da função {}, tendo que retirar o "return", pois obrigatoriamente já estamos retornando de forma implícita tudo o que está na função.
+export function () =>
+    <>
+        <h1>My Title</h1>
+    </>
+
+-------------------------------------------------------
+Aula 19 (antigo 18 e 19) - Relacao entre componentes
 -------------------------------------------------------
 
 // --- indes.js
@@ -215,6 +267,40 @@ export default props =>
     </div>
 
 
+
+-------------------------------------------------------
+Aula 21 (novo) - Passando estilos a um componente
+-------------------------------------------------------
+
+// --- App.jsx
+
+<Card color="#FA6900"> <-------- passando um attr a um componente
+    <Aleatorio min={1} max={60} />
+</Card>
+
+// --- Card.jsx
+
+import './Card.css'
+import React from 'react'
+
+export default props => {
+
+    const cardStyle = { <-------- criando um obj para passar como estilos ao componente
+        backgroundColor: props.color || '#F00', <-------- se nao receber uma cor nos props, aplica a cor "#F00" como padrão
+        borderColor: props.color || '#F00'
+    }
+
+    return (
+        <div className="Card" style={cardStyle}> <-------- aplicação do estilo
+            <div className="Title">{props.titulo}</div>
+            <div className="Content">
+                {props.children}
+            </div>
+        </div>
+    )
+}
+
+
 -------------------------------------------------------
 Aula 20 - Relacao direta entre componentes
 -------------------------------------------------------
@@ -244,7 +330,7 @@ export default props =>
 
 
 -------------------------------------------------------
-Aula 21 - Propagando "props" para componentes filhos #01
+Aula 23 (novo) 21 (antigo) - Propagando "props" para componentes filhos #01
 -------------------------------------------------------
 
 Método cloneElement() para clonar os "filhos" que a funcao recebeu , podendo passar propriedades para esses clones gerados.
@@ -277,13 +363,17 @@ export default props =>
 
 
 -------------------------------------------------------
-Aula 22 - Propagando "props" para componentes filhos #02
+Aula 23 (novo) 22 (antigo) - Propagando "props" para componentes filhos #02
 -------------------------------------------------------
 Ao tentar compartilhar a propriedade do componente pai com mais de um filho, obtem o erro:
 "Element type is invalid: expected a string(for built-in components) or..."
 Isto acontece porque precisa percorrer um elemento por vez e clonar cada um. => Usar a função map()
 
 No React existe uma versão da funcao map(). => {React.Children.map()}
+
+Se temos acesso diretamente aos filhos (às propriedades dos componentes filhos) é fácil, basta pegar a propriedade do pai e passar para os filhos.
+Quando temos apenas acesso à props.children, entao temos que usar as funções do React: React.Children.map() ... React.cloneElement().
+..ou também usar o props.children.map()...
 
 // --- index.js (completo)
 
@@ -311,10 +401,263 @@ export default props =>
         {React.Children.map(props.children, filho => {
             return React.cloneElement(filho, { ...props })
         })}
+
+        {/*
+            // Opaco 1 :: props.children.map
+            props.children.map((child, i) => {
+                return React.cloneElement(child, { ...props, key: i })
+            })
+        */}
     </div>
 
 Obs: também podemos colocar a funcao map() numa funcao de utilidde global, ex: utils.jsx
 
+
+-------------------------------------------------------
+Aula 25 (novo) - Repetição (listas)
+-------------------------------------------------------
+
+// --- data/alunos.js
+
+export default [
+    { id: 1, nome: "Ana", nota: 6.2 },
+    { id: 2, nome: "Bia", nota: 7.6 },
+    { id: 3, nome: "Carlos", nota: 8.1 },
+    { id: 4, nome: "Daniel", nota: 5.7 },
+    { id: 5, nome: "Gui", nota: 10.0 },
+    { id: 6, nome: "Rebeca", nota: 9.5 },
+    { id: 7, nome: "Arthur", nota: 7.7 },
+    { id: 8, nome: "Pedro", nota: 6.9 },
+    { id: 9, nome: "Gustavo", nota: 8.8 },
+];
+
+// --- components/repeticao/ListaAlunos.jsx
+
+import React from 'react'
+import alunos from '../../data/alunos'
+
+export default props => {
+
+    // Transformar um array de objetos alunos em um array de objetos JSX.
+    const alunosListJSX = alunos.map(alunos => {
+        return (
+            <li key={alunos.id}>
+                {alunos.id}. {alunos.nome} -> {alunos.nota}
+            </li>
+        )
+    });
+
+    return (
+        <div>
+            <ul style={{ listStyle: 'none' }}>
+                {alunosListJSX}
+            </ul>
+        </div>
+    );
+}
+
+# Desafio Repetição Usando Tabela
+
+// --- produtos.js
+
+const produtos = [
+    { id: 1, nome: "Relógio Azul", preco: 6.578 },
+    { id: 2, nome: "Pincel", preco: 2.999 },
+    { id: 3, nome: "Conjunto de Canetas", preco: 3 },
+    { id: 4, nome: "Fones XPTO", preco: 7 },
+    { id: 5, nome: "Caderno Tribo", preco: 0.5 },
+    { id: 6, nome: "Smartphone Asus", preco: 170 },
+    { id: 7, nome: "Lego Espacial", preco: 45 },
+];
+
+export default produtos;
+
+// --- components/repeticao/TabelaProdutos.css
+
+.TabelaProdutos {
+    background-color: 008b8b;
+}
+.TabelaProdutos th {
+    background-color: #283cae;
+    color: #fff;
+}
+.TabelaProdutos .Par {
+    background-color: #ddd;
+}
+.TabelaProdutos .Impar {
+    background-color: #ccc;
+}
+
+
+// --- components/repeticao/TabelaProdutos.jsx
+
+import './TabelaProdutos.css'
+import React from 'react'
+import produtos from '../../data/produtos'
+
+export default () => {
+    // Usando rendericazao condicional na cor da tabela e no preco
+    function getLinhas() {
+        return produtos.map((produto, i) => {
+            return (
+                <tr key={produto.id} className={i % 2 === 0 ? 'Par' : 'Impar'}>
+                    <td>{produto.id}</td>
+                    <td>{produto.nome}</td>
+                    <td>€ {produto.preco.toFixed(2).replace('.', ',')}</td>
+                </tr>
+            )
+        })
+    }
+
+    return (
+        <table className="TabelaProdutos" style={{ width: '100%' }} border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Preço</th>
+                </tr>
+            </thead>
+            <tbody>
+                {getLinhas()}
+            </tbody>
+        </table>
+    )
+}
+
+
+-------------------------------------------------------
+Aula 27 (novo) - Renderização Condicional
+-------------------------------------------------------
+
+// --- App.js
+
+<Card titulo="Aula 27 (ex #08) - Rendericazao Condicional #01" color="#982395">
+    <ParOuImpar numero={21}></ParOuImpar>
+</Card>
+
+// --- conponents/condicional/ParOuImpar.jsx (utilizando operador ternário)
+
+import React from 'react'
+
+export default props => {
+    const isPar = props.numero % 2 === 0
+    return (
+        <div>
+            <span>O número {props.numero} é </span>
+            {isPar ? <span>Par</span> : <span>Ímpar</span>}
+        </div>
+    )
+}
+
+
+-------------------------------------------------------
+Aula 28 (novo) - Renderização Condicional de Componente e props.children
+-------------------------------------------------------
+
+// --- App.js
+
+<Card titulo="Aula 27 (ex #08) - Rendericazao Condicional #01" color="#982395">
+    <ParOuImpar numero={21}></ParOuImpar>
+    <UsuarioInfo usuario={{ nome: 'Fernando' }} />
+    <UsuarioInfo usuario={{ email: 'fer@nando.com' }} />
+    <UsuarioInfo usuario={{}} />
+    <UsuarioInfo />
+</Card>
+
+// --- conponents/condicional/If.jsx
+// O componente apresenta os seus elementos filhos (props.children) se o atributo props.test for true.
+
+export default (props) => {
+    if (props.test) {
+        return props.children;
+    } else {
+        return false;
+    }
+};
+
+// --- conponents/condicional/UsuarioInfo.jsx
+// Irá mostrar a informação dentro do componente <If> caso tenha sido passado o stributo usuario.nome
+
+import React from 'react'
+import If from './If'
+
+export default props => {
+    const usuario = props.usuario || {}
+    return (
+        <div>
+            <If test={usuario && usuario.nome}>
+                Seja bem vindo <strong>{usuario.nome}</strong>!
+            </If>
+            <If test={!usuario || !usuario.nome}>
+                Seja bem vindo <strong>Amigão</strong>!
+            </If>
+        </div>
+    )
+}
+
+
+-------------------------------------------------------
+Aula 29 (novo) - Renderização Condicional de Componente <If><Else></Else></If>
+-------------------------------------------------------
+
+// --- App.js
+
+<Card titulo="Aula 27 (ex #08) - Rendericazao Condicional #01" color="#982395">
+    <ParOuImpar numero={21}></ParOuImpar>
+    <UsuarioInfo usuario={{ nome: 'Fernando' }} />
+    <UsuarioInfo usuario={{ email: 'fer@nando.com' }} />
+    <UsuarioInfo usuario={{}} />
+    <UsuarioInfo />
+</Card>
+
+// --- conponents/condicional/If.jsx
+// O componente apresenta os seus elementos filhos (props.children) se o atributo props.test for true.
+
+export default (props) => {
+    // Encontrar o elemento <Else> que está dentro de <If>
+    const elseChild = props.children.filter((child) => {
+        return child.type && child.type.name === "Else";
+    })[0]; // Como isto retorna um array, pegamos o 1º elem do array
+
+    // Todos os elementos filhos que não sejam o Else
+    const ifChildren = props.children.filter((child) => {
+        return child !== elseChild;
+    });
+
+    // console.log("elseChild :: ", elseChild);
+
+    if (props.test) {
+        return ifChildren;
+    } else if (elseChild) {
+        return elseChild;
+    } else {
+        return false;
+    }
+};
+
+export const Else = (props) => props.children;
+
+// --- conponents/condicional/UsuarioInfo.jsx
+// Irá mostrar a informação dentro do componente <If> caso tenha sido passado o stributo usuario.nome
+
+import React from 'react'
+import If, { Else } from './If'
+
+export default props => {
+    const usuario = props.usuario || {}
+    return (
+        <div>
+            {/* Aula 29 - Condicionais com Componentes If Else */}
+            <If test={usuario && usuario.nome}>
+                Seja bem vindo <strong>{usuario.nome}</strong>!
+                <Else>
+                    Seja bem vindo <strong>Amigão</strong>!
+                </Else>
+            </If>
+        </div>
+    )
+}
 
 -------------------------------------------------------
 Aula 23 - Adicionando funcao em um componente funcional
@@ -356,10 +699,179 @@ export default props => {
 
 
 -------------------------------------------------------
-Aula 24 - Comunicacao indireta entre componentes
+Aula 30 (novo) - Comunicacao direta (via props)
 -------------------------------------------------------
 
-// --- indes.js
+// --- App.jsx
+
+<Card titulo="Aula 30 (ex #09) - Comunicação Direta" color="#59323C">
+    <DiretaPai></DiretaPai>
+</Card>
+
+// --- DiretaPai.jsx
+
+import React from 'react'
+import DiretaFilho from './DiretaFilho'
+export default props => {
+    return (
+        <div>
+            <DiretaFilho nome="Junior" idade={20} nerd={true}></DiretaFilho>
+            <DiretaFilho nome="Gabriel" idade={17} nerd={false}></DiretaFilho>
+        </div>
+    )
+}
+
+// --- DiretaFilho.jsx
+
+import React from 'react'
+export default props => {
+    return (
+        <div>
+            <span>{props.nome} </span>
+            <span>{props.idade} </span>
+            <span>{props.nerd ? 'Verdadeiro' : 'Falso'}!</span>
+        </div>
+    )
+}
+
+-------------------------------------------------------
+Aula 31 (novo) - Comunicacao indireta entre componentes - React Hooks
+-------------------------------------------------------
+
+O componente pai passa via props uma funcao para o filho
+e o filho usa essa função passando uma info para o pai.
+
+(!) A partir do React v16.8 os componentes funcionais passaram ter estado
+
+// --- App.jsx
+
+<Card titulo="Aula 31 (ex #10) - Comunicação Indireta" color="#8BAD39">
+    <IndiretaPai></IndiretaPai>
+</Card>
+
+// --- componentes/basicos/comunicacao/IndiretaPai.jsx
+
+import React, { useState } from 'react'
+import InditeraFilho from './IndiretaFilho'
+
+export default props => {
+
+    // Somente com estas vars a info nao será atualizada neste componente pai,
+    // isto precisa ser implementado com estado.
+    // let nome = ''
+    // let idade = 0
+    // let nerd = false
+    // A função useState retorna um array com duas poesicoes:
+
+    // - [0]: o valor
+    // - [1]: função usada para alterar o valor
+
+    // Utilizando o destructuring, podemos receber as duas posições numa mesma linha de code
+    const [nome, setNome] = useState('?')
+    const [idade, setIdade] = useState(0)
+    const [nerd, setNerd] = useState(false)
+
+    console.log('nome inicial: ', nome)
+
+    function fornecerInformacoes(nome, idade, nerd) {
+        setNome(nome)
+        setIdade(idade)
+        setNerd(nerd)
+    }
+
+    return (
+        <div>
+            <div>Pai</div>
+            <span>{nome}</span>
+            <span> <strong>{idade}</strong></span>
+            <span> {nerd ? 'Verdadeiro' : 'Falso'}</span>
+            <InditeraFilho quandoClicar={fornecerInformacoes}></InditeraFilho>
+        </div>
+    )
+}
+
+// --- componentes/basicos/comunicacao/IndiretaFilho.jsx
+
+import React from 'react'
+
+export default props => {
+    const callBack = props.quandoClicar
+    const gerarIdade = () => parseInt(Math.random() * (20)) + 50 // 20 é o range e 50 é o valor mínimo
+    const gerarNerd = () => Math.random() > 0.5
+    return (
+        <div>
+            <div>Filho</div>
+            <button onClick={_ => callBack('João', gerarIdade(), gerarNerd)}>Fornecer Informações</button>
+        </div>
+    )
+}
+
+// O símbolo underline (_) na arow function do botão significa que não me interesso em receber o event
+
+/* Versão do botão com function()
+<button onClick={
+    function (e) {
+        props.quandoClicar('João', 53, true)
+    }
+}>Fornecer Informações</button>
+*/
+
+
+-------------------------------------------------------
+Aula 33 - Componente Controlado
+-------------------------------------------------------
+// Formulários :: https://pt-br.reactjs.org/docs/forms.html
+
+// Fluxo unidirecional muito important no React:
+// Somente quando o estado muda é que o componente muda (visual do componente) 
+
+// --- App.jsx
+
+<Card titulo="Aula 33 (ex #11) - Componente Controlado" color="#E45F56">
+    <Input></Input>
+</Card>
+
+// --- components/formulario/Input.jsx
+
+import './Input.css'
+import React, { userState, useState } from 'react'
+
+export default props => {
+
+    const [valor, setValor] = useState('Inicial')
+
+    function quandoMudar(e) {
+        console.log(e.target.value)
+        setValor(e.target.value)
+    }
+    return (
+        <div className="Input">
+            <h2>{valor}</h2>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                <h3>Controlled component</h3>
+                <input value={valor} onChange={quandoMudar} />
+
+                <h3>Controlled component (read only)</h3>
+                <input value={valor} readOnly disabled />
+
+                <h3>Uncontrolled component</h3>
+                <input value={undefined} />
+            </div>
+        </div>
+    )
+}
+
+-------------------------------------------------------
+Aula 24 (antigo) - Comunicacao indireta entre componentes
+-------------------------------------------------------
+
+O componente pai passa via props uma funcao para o filho
+e o filho usa essa função passando uma info para o pai.
+
+// --- index.js
 
 import Pai from './componentes/Pai'
 ...
@@ -400,7 +912,7 @@ export default props =>
 
     
 -------------------------------------------------------
-Aula 25 - Componente de classe
+Aula 34 (novo) 25 (antigo) - Componente de classe (Hello World de uma classe)
 -------------------------------------------------------
 Numa classe, podemos aceder aos props através do "this".
 
@@ -430,7 +942,7 @@ export default class ComponenteClasse extends React.Component {}
 
 
 -------------------------------------------------------
-Aula 27 - Componente de Classe Contador
+Aula 34 (novo) 27 (antigo) - Componente de Classe Contador
 -------------------------------------------------------
 
 Um componente baseado em classe obrigatoriamente precisa ter o método render(), 
@@ -449,10 +961,10 @@ No caso do programa Contador, quem está chamando a função é o browser, a par
 // Solução 01 :: bind(this) da função no construtor da classe
 constructor(props) {
     super(props)
-    this.maisUm = this.maisUm.bind(this)
+    this.maisUm = this.maisUm.bind(this) // no construtor, o this aqui dentro realmente aponta para a instância atual
 }
 
-// Solução 02 :: Uso de arrow function no onClick (ela garante que o this será associado ao local que a função foi escrita)
+// Solução 02 :: Uso de arrow function no onClick (invocar a funcao dentro de uma funcao arrow, ela garante que o this será associado ao local que a função foi escrita)
 A partir do ECMAScript 2015 surgiu a funcao arrow, e ela trata o this associado ao contexto léxico
 <button onClick={() => this.maisUm()}>Inc</button>
 
@@ -465,6 +977,104 @@ maisUm = () => {
 (!) Tudo o que se recebe via propriedade não pode ser mudado, ou seja, é "ready only".
 Logo, não é possível alterar um valor do props. Para isso, devemos utilizar estado, conseguindo assim, modifincar algo dentro do componente.
 
+Erro ao tentar alterar um props:
+TypeError: Cannot assign to read only property 'nota' of object '#<Object>'
+
+# Implementação da aula 34 (novo)
+
+// --- App.jsx
+
+<Card titulo="Aula 34 (ex #12) - Componente Classe (Contador)" color="#424242">
+    <Contador numeroInicial={10}></Contador>
+</Card>
+
+// --- components/contador/Contador.jsx
+
+import './Contador.css'
+import React from 'react'
+
+class Contador extends React.Component {
+
+    // Aqui pode ser implementado o método construtor, deixando o state dentro
+    // constructor(props) {
+    //     super(props)
+    //     this.state = {
+    //         numero: props.numeroInicial
+    //     }
+    // }
+
+    // Definir estado dentro de um componente baseado em classe
+    state = {
+        numero: this.props.numeroInicial || 0,
+        passo: this.props.passoInicial || 5,
+    }
+
+    // constructor(props) {
+    //     super(props)
+    //     this.inc = this.inc.bind(this) // no construtor, o this aqui dentro realmente aponta para a instância atual
+    // }
+
+    inc = () => {
+        this.setState({
+            numero: this.state.numero + this.state.passo
+        })
+    }
+
+    dec = () => {
+        this.setState({
+            numero: this.state.numero - this.state.passo
+        })
+    }
+
+    // Implementacao com funcao arrow, para nao ter problema com o "this"
+    setPasso = (evento) => {
+        this.setState({
+            passo: +evento.target.value // o sinal de + no início converte o valor de string -> int
+        })
+    }
+
+    render() {
+
+        // JSX retornado
+        return (
+            <div className="Contador">
+                <h2>Contador</h2>
+                <p>{this.state.numero}</p>
+                <div>
+                    <label htmlFor="passoInput">Passo: </label>
+                    <input id="passoInput" type="number"
+                        value={this.state.passo} onChange={this.setPasso} />
+                </div>
+                <button onClick={this.inc}>+</button>
+                <button onClick={this.dec}>-</button>
+            </div>
+        )
+    }
+}
+
+export default Contador
+// Como temos algo nomeado, podemos exportar ao final.
+// Tambem posso exportar diretamente na declaracao da classe
+
+// --- components/contador/Contador.css
+
+.Contador input {
+    font-size: 1.4rem;
+    width: 60px;
+}
+
+.Contador button {
+    margin: 15px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: #1499d2;
+    color: #fff;
+    font-size: 1.4rem;
+}
+
+
+# Implementação da aula 27 (antigo)
 
 // --- index.js
 
@@ -481,7 +1091,7 @@ export default class Contador extends Component {
         numero: this.props.numeroInicial
     }
 
-    // Uso de arrwo function para que o this funcione corretamente no contexto da classe.
+    // Uso de arrow function para que o this funcione corretamente no contexto da classe.
     maisUm = () => {
         this.setState({ numero: this.state.numero + 1 })
         console.log(this)
@@ -518,6 +1128,9 @@ export default class Contador extends Component {
 Aula 31 - React Hooks
 -------------------------------------------------------
 
+Introducing Hooks
+https://reactjs.org/docs/hooks-intro.html
+
 A partir da versão 16.8 do React, é possível alterar o estado dos componentes funcionais (feitos com função), 
 utilizando para isso, os Hooks.
 
@@ -546,3 +1159,26 @@ export default props => {
 }
 
 Outro uso importante dos Hooks é para aceder aos métodos do ciclo de vida do componente.
+
+// --- Hook.jsx
+
+import React, { useState, useEffect } from 'react'
+
+export default props => {
+    // Usando desestruturador: [var, funcao para alterar a var]
+    const [contador, setContador] = useState(0)
+    const [parOuImpar, setParOuImpar] = useState('par')
+
+    // Funcao chamada sempre que o coponente é criado ou alterado
+    useEffect(() => {
+        contador % 2 == 0 ? setParOuImpar('Par') : setParOuImpar('Impar')
+    })
+    return (
+        <div>
+            <h1>{contador}</h1>
+            <h3>{parOuImpar}</h3>
+            <button onClick={() => setContador(contador + 1)}>Inc</button>
+            <button onClick={() => setContador(contador - 1)}>Dec</button>
+        </div>
+    )
+}
