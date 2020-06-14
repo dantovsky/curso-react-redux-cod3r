@@ -1,0 +1,10 @@
+.calculator {
+    height: 320px;
+    width: 235px;
+    border-radius: 5px;
+    overflow: hidden;
+
+    display: grid;
+    grid-template-columns: repeat(4, 25%); /* 4 col de 25% cada uma */
+    grid-template-rows: 1fr 48px 48px 48px 48px 48px; /* 1fr = 1 fragment */
+}

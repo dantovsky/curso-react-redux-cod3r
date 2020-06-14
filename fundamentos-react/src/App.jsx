@@ -1,6 +1,7 @@
 import './App.css'
 import React from 'react'
 
+import Mega from './components/mega/Mega'
 import Contador from './components/contador/Contador'
 import Input from './components/formulario/Input'
 import IndiretaPai from './components/comunicacao/IndiretaPai'
@@ -28,6 +29,10 @@ export default () =>
         <strong>Olá React!!!</strong> {tag}
 
         <div className="Cards">
+
+            <Card titulo="Aula 36 (ex #13) - Componente Mega (gerar números)" color="#B9006E">
+                <Mega quantidade={8}></Mega>
+            </Card>
 
             <Card titulo="Aula 34 (ex #12) - Componente Classe (Contador)" color="#424242">
                 <Contador numeroInicial={10}></Contador>

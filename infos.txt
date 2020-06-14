@@ -12,6 +12,26 @@ O React é um framework com foco muito forte na View e na questão dos component
 - requisições de HTTP Client para fazer requisições AJAX
 - gerenciamento de estado da app (embora tenha recursos que ajudam nisso)
 
+
+-------------------------------------------------------
+Formas de criar novo app React:
+-------------------------------------------------------
+
+Podemos instalar um módulo do Node que cria uma app React:
+- npm i -g create-react-app (usar sudo)
+Depois para instalar uma nova app React:
+- create-react-app nome-app
+
+Outra forma de criar uma app React:
+- npx create-react-app my-app
+
+# Resolução de problemas
+
+Caso a criação do app React dê problemas:
+- Primeiro usa esse comando no CMD:     npm rm -g create-react-app
+- Depois usa esse comando:              npm install -g create-react-app
+- E por fim cria o projeto:             npx create-react-app my-app
+
 -------------------------------------------------------
 Rodar código
 -------------------------------------------------------
@@ -31,6 +51,21 @@ Depois rodar dentro das duas pastas o comando:
 
 Aceder no browser, o endereço:
 - http://localhost:8080/
+
+
+
+-------------------------------------------------------
+Links interessantes
+-------------------------------------------------------
+
+Color Hunt
+https://colorhunt.co/
+
+colorhunt-726a95709fb0a0c1b8f4ebc1: "189676"
+colorhunt-726a95709fb0a0c1b8f4ebc1: "189676"
+
+Pretty gradients
+https://uigradients.com/#ColorsOfSky
 
 
 -------------------------------------------------------
@@ -980,7 +1015,9 @@ Logo, não é possível alterar um valor do props. Para isso, devemos utilizar e
 Erro ao tentar alterar um props:
 TypeError: Cannot assign to read only property 'nota' of object '#<Object>'
 
+
 # Implementação da aula 34 (novo)
+
 
 // --- App.jsx
 
@@ -1076,6 +1113,7 @@ export default Contador
 
 # Implementação da aula 27 (antigo)
 
+
 // --- index.js
 
 <Contador numeroInicial={10} />
@@ -1123,6 +1161,173 @@ export default class Contador extends Component {
     }
 }
 
+
+-------------------------------------------------------
+Aula 35 (novo)- Componente de Classe Contador (dividico em componentes)
+-------------------------------------------------------
+
+// --- contador/Contador.jsx
+
+import './Contador.css'
+import React from 'react'
+
+import Display from './Display'
+import Botoes from './Botoes'
+import PassoForm from './PassoForm'
+
+class Contador extends React.Component {
+
+    // Aqui pode ser implementado o método construtor, deixando o state dentro
+    // constructor(props) {
+    //     super(props)
+    //     this.state = {
+    //         numero: props.numeroInicial
+    //     }
+    // }
+
+    // Definir estado dentro de um componente baseado em classe
+    state = {
+        numero: this.props.numeroInicial || 0,
+        passo: this.props.passoInicial || 5,
+    }
+
+    // constructor(props) {
+    //     super(props)
+    //     this.inc = this.inc.bind(this) // no construtor, o this aqui dentro realmente aponta para a instância atual
+    // }
+
+    inc = () => {
+        this.setState({
+            numero: this.state.numero + this.state.passo
+        })
+    }
+
+    dec = () => {
+        this.setState({
+            numero: this.state.numero - this.state.passo
+        })
+    }
+
+    // Implementacao com funcao arrow, para nao ter problema com o "this"
+    setPasso = (novoPasso) => {
+        this.setState({
+            passo: novoPasso
+        })
+    }
+
+    render() {
+
+        // JSX retornado
+        return (
+            <div className="Contador">
+                <h2>Contador</h2>
+                <Display numero={this.state.numero} />
+                <PassoForm passo={this.state.passo} setPasso={this.setPasso} />
+                <Botoes setInc={this.inc} setDec={this.dec} />
+            </div>
+        )
+    }
+}
+
+export default Contador
+// Como temos algo nomeado, podemos exportar ao final.
+// Tambem posso exportar diretamente na declaracao da classe
+
+// --- contador/Display.jsx
+
+import React from 'react'
+export default props => {
+    return (
+        <h3>{props.numero}</h3>
+    )
+}
+
+// --- contador/PassoForm.jsx
+
+import React from 'react'
+export default props => {
+    return (
+        <div>
+            <label htmlFor="passoInput">Passo: </label>
+            <input id="passoInput" type="number"
+                value={props.passo}
+                onChange={e => props.setPasso(+e.target.value)} />
+            {/* o sinal de + no início converte o valor de string -> int */}
+        </div>
+    )
+}
+
+// --- contador/Botoes.jsx
+
+import React from 'react'
+export default props => {
+    return (
+        <div>
+            <button onClick={props.setInc}>+</button>
+            <button onClick={props.setDec}>-</button>
+        </div>
+    )
+}
+
+-------------------------------------------------------
+Aula 37 (novo)- DEsafio Megassena
+-------------------------------------------------------
+
+// --- components/mega/Mega.jsx
+
+import React, { useState } from 'react'
+import './Mega.css'
+
+export default props => {
+
+    function gerarNumeroNaoContido(min, max, array) {
+        const aleatorio = parseInt(Math.random() * (max + 1 - min) + min)
+        return array.includes(aleatorio) ?
+            gerarNumeroNaoContido(min, max, array) :
+            aleatorio
+    }
+
+    function gerarNumeros(quant) {
+        const numeros = Array(quant)
+            .fill(0)
+            .reduce((nums) => {
+                const novoNumero = gerarNumeroNaoContido(1, 60, nums)
+                console.log([...nums, novoNumero])
+                return [...nums, novoNumero]
+            }, [])
+            .sort((n1, n2) => n1 - n2)
+        return numeros
+    }
+
+    const [quant, setQuant] = useState(props.quantidade || 6)
+    const numerosIniciais = gerarNumeros(quant) // Array(quant).fill(0)
+    const [numeros, setNumeros] = useState(numerosIniciais)
+
+    return (
+        <div className="Mega">
+            <h3>Gere um novo jogo surpresa de {quant} numeros</h3>
+            <button onClick={_ => setNumeros(gerarNumeros(quant))}>Gerar Surpresa</button>
+            <div>
+                <label>Quantidade de números</label>
+                <input min="6" max="15" type="number" value={quant} onChange={e => {
+                    setQuant(+e.target.value)
+                    setNumeros(gerarNumeros(+e.target.value))
+                }} />
+            </div>
+            <p>Surpresinha: {numeros.join(', ')}</p>
+        </div>
+    )
+}
+
+// --- components/mega/Mega.css
+
+.Mega label {
+    margin-right: 10px;
+}
+.Mega input {
+    font-size: 1.4rem;
+    width: 50px;
+}
 
 -------------------------------------------------------
 Aula 31 - React Hooks
