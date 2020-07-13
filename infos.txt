@@ -16,6 +16,7 @@ O React é um framework com foco muito forte na View e na questão dos component
 -------------------------------------------------------
 Formas de criar novo app React:
 -------------------------------------------------------
+https://pt-br.reactjs.org/docs/create-a-new-react-app.html
 
 Podemos instalar um módulo do Node que cria uma app React:
 - npm i -g create-react-app (usar sudo)
@@ -32,6 +33,43 @@ Caso a criação do app React dê problemas:
 - Depois usa esse comando:              npm install -g create-react-app
 - E por fim cria o projeto:             npx create-react-app my-app
 
+
+-------------------------------------------------------
+Instalação de módulos e package.json
+-------------------------------------------------------
+
+# Comandos básicos do Node
+
+Iniciar um projeto Node
+- npm init
+
+Iniciar um projeto Node diretamente com todas as perguntas respondidas automaticamente com YES
+- npm init -y
+
+# Flags
+
+-E          instalar um módulo exato 
+--save      salva as dependências num arquivo => salva um módulo que será preciso tanto para o modo dev como para prod
+--save-dev  instala módulos necessários apenas para o modo de dev
+
+# Módulos do Node
+
+body-parser
+Realiza o parse de strings no formato JSON para objetos JavaScript, assim como faz parse de dados de formulário.
+
+express
+Framework web.
+
+mongoose
+Biblioteca responsável por acessar o DB, faz o mapeamento dos objetos JS em documentos no MongoDB e realiza validações.
+
+node-restful (https://github.com/baugarten/node-restful())
+Simplifica a construção de APIs.
+
+pm2
+Loucher, responsável por iniciar uma aplicação. Usado na parte de produção. Na parte dev podemos usar o Nodemon.
+
+
 -------------------------------------------------------
 Rodar código
 -------------------------------------------------------
@@ -44,7 +82,7 @@ e
 F:\Dropbox\Dantiii\Cursos\Udemy\react\curso-react-redux\my-money-app\backend
 
 Fazer o comando:
-- npm i (para instalar as dependências
+- npm i (para instalar as dependências)
 
 Depois rodar dentro das duas pastas o comando:
 - npm run dev
@@ -1336,7 +1374,7 @@ Aula 31 - React Hooks
 Introducing Hooks
 https://reactjs.org/docs/hooks-intro.html
 
-A partir da versão 16.8 do React, é possível alterar o estado dos componentes funcionais (feitos com função), 
+A partir da versão 16.8 do React, é possível alterar o estado dos componentes funcionais (feitos com função ao invés de classe), 
 utilizando para isso, os Hooks.
 
 // --- index.js
@@ -1387,3 +1425,72 @@ export default props => {
         </div>
     )
 }
+
+
+-------------------------------------------------------
+Aula 48 - TodoApp - Config do backend 
+-------------------------------------------------------
+
+Documentação do node-restful
+https://github.com/baugarten/node-restful
+
+Inicialização do projeto:
+- npm init -y
+- npm install --save -E body-parser@1.15.2 express@4.14.0 mongoose@4.7.0 node-restful@0.2.5 pm2@2.15
+- npm install --save-dev -E nodemon@1.11.0
+
+/*
+ * To testing API:
+ * - run backend: npm run dev (use sudo if running on Linux)
+ * - run Mongo: sudo mongod
+ * - on Postman, choose POST
+ * - API: http://localhost:3003/api/todos
+ * - Choose Body >> x-www-form-urlencoded
+ * - Choose key-value edit or Bulk edit:
+ * - Insert: description: Concluir o curso de React.
+ *
+ * GET
+ *
+ * http://localhost:3003/api/todos
+ *
+ * Sorted desc
+ * http://localhost:3003/api/todos?sort=-createdAt
+ *
+ * Sorted desc and using regex to filtering by some text
+ * http://localhost:3003/api/todos?sort=-createdAt&description__regex=/curso/
+ */
+
+ # Soluções para rodar a app
+
+ Devemos rodar o comando
+ - npm run production
+ para que este chame o pm2. Caso obtenha a info: "pme: command not found", pode resolver:
+ - npm i pme -g
+ - ./node_modules/.bin/pm2 [monit|status]
+
+
+-------------------------------------------------------
+Aula 56 - TodoApp - Config do frontend 
+-------------------------------------------------------
+
+- mkdir frontend && cd frontend
+- npm init -y (iniciar o package.json)
+
+# Dependências
+
+Webpack
+- npm i --save-dev webpack@1.14.0 webpack-dev-server@1.16.2
+
+Babel (para interpretar e fazer o transpiling do JSX usado no React)
+- npm i --save-dev babel-core@6.22.1 babel-loader@6.2.10 babel-plugin-react-html-attrs@2.0.0 babel-plugin-transform-object-rest-spread@6.22.0 babel-preset-es2015@6.22.0 babel-preset-react@6.22.0
+
+Processamento de CSS e carregamento de imagens e fonts
+- npm i --save-dev extract-text-webpack-plugin@1.0.1 css-loader@0.26.1 style-loader@0.13.1 file-loader@0.9.0
+
+extract-text-webpack-plugin     :: extrai os textos dos arquivos .CSS
+css-loader                      :: realiza processos em cima do CSS
+style-loader                    :: realiza processos em cima do CSS
+file-loader                     :: carregar imagens e fonts dentro da config do Webpack
+
+Template a ser utilizado
+- npm i --save-dev bootstrap@3.3.7 font-awesome@4.7.0
