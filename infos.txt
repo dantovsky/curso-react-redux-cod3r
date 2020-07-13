@@ -1494,3 +1494,5 @@ file-loader                     :: carregar imagens e fonts dentro da config do 
 
 Template a ser utilizado
 - npm i --save-dev bootstrap@3.3.7 font-awesome@4.7.0
+
+=)
