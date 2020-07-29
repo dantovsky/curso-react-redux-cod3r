@@ -1483,6 +1483,7 @@ Rodar o Mongo server (porta padrão é a 27017):
 sudo mongod 
 sudo mongod --port 27018
 
+
 -------------------------------------------------------
 Aula 56 - TodoApp - Config do frontend 
 -------------------------------------------------------
@@ -1550,6 +1551,12 @@ package.json
     "webpack-dev-server": "^1.16.2"
   }
 }
+
+
+# Para rodar o projeto TodoApp:
+Rodar o MongoDB:      'sudo mongod' (ou: 'sudo mongod --port 27018')
+Rodar o backend:      'sudo npm run dev' from backend folder (ou: 'sudo npm run production' para rodar o PM2)
+Rodar o frontend:      'sudo npm run dev' from frontend folder
 
 
 -------------------------------------------------------

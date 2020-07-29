@@ -8,3 +8,17 @@ https://github.com/dantovsky/curso-react-redux-cod3r
 
 - npm install (instalar as dependencias)
 - npm start (iniciar a app)
+
+## Apps desenvolvidas no curso de React
+
+### TodoApp
+
+![TodoApp com React](https://raw.githubusercontent.com/dantovsky/curso-react-redux-cod3r/master/screenshot-todoapp.png "TodoApp com React")
+
+- Backend com PM2, Node Restful, Mongo, Mongoose.
+- Frontend React.
+
+Para rodar o projeto TodoApp:
+- Rodar o MongoDB: 'sudo mongod' (ou: 'sudo mongod --port 27018')
+- Rodar o backend: 'sudo npm run dev' from backend folder (ou: 'sudo npm run production' para rodar o PM2)
+- Rodar o frontend: 'sudo npm run dev' from frontend folder
