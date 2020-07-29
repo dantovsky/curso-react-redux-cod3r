@@ -1,4 +1,4 @@
-const Todo = require('./todo').default
+const Todo = require('./todo')
 
 // Enabling which methods are available on the API REST made by Node Restful
 Todo.methods(['get', 'post', 'put', 'delete'])
