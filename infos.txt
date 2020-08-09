@@ -1863,6 +1863,153 @@ export default props => {
 
 
 -------------------------------------------------------
+Aula 78 - Entendendo Redux
+-------------------------------------------------------
+
+O Redux tem a ideia de trazer os estados para um local centralizado.
+
+Middlewares no Redux
+Realiza opoerações com o objeto (dados) retornados pela função, antes de ser passado para o dispatch.
+
+# Nomeclatura no Redux
+
+- Action Creator (lógica da funcao): é uma função síncrona que retorna uma Action.
+  Retorna sempre um objeto, que dentro dele pode ter uma Promise, mas ele nunca irá retornar uma Promise do Action Creator.
+
+- Action (dados): é um objeto que tem pelo menos um atributo type ("tipo da action").
+  Uma Action pode ter outros dados.
+
+- Reducers (funções do dispatch): são funções puras (função que não gera efeito colateral), ou seja,
+  sempre que passar um determinado param para essa funcao ela irá retornar sempre a mesma resposta,
+  porque ela não pega nenhuma info externa à função e não gera nenhuma alteração externa a funcao 
+  (passamos params e ela retorna params), não alteramos os params que foram passados, mas sim geramos 
+  novas versões desses params (geramos um clone do objeto com uma nova versão). => Tem a ver com os 
+  princípios da programação funcional que tem a ver com o Redux.
+  Temos um reducer para cada atributo do estado.
+  O papel dele é receber o estado anterior, receber a ação que aconteceu (a Action) e então gerar 
+  um novo atributo (uma nova versão do estado).
+  Dentro dos Reducers temos a Action >> Atributo type, sendo possível analisar se a action.type é
+  igual a outro valor, para daí disparar uma ação.
+
+# Anatomia de uma Action
+
+{
+    type: 'ALGUM_EVENTO_OCORREU',
+    payload: {
+        /* Aqui estão os dados */
+    }
+}
+
+type: String => nome da Action
+payload: Obj => dados associados a esse evento
+
+Ex 1: gerar um evento que vai alterar um número.
+{
+    type: 'NUMERO_ALTERADO',        // nome do evento
+    payload: 12                     // dado associado ao evento
+}
+
+Ex 2: obter a lista de produtos.
+{
+    type: 'LISTA_PRODUTOS_CHEGOU',
+    payload: [
+        { id: 1, nome: 'Caneta', preco: 3.5 },
+        { id: 2, nome: 'Lapis', preco: 2.5 },
+        { id: 3, nome: 'Caderno', preco: 12.9 },
+    ]
+}
+
+Ex 3: logout de um user.
+{
+    type: 'USER_SAIU',
+}
+
+# Anatomia de um Action Creator (função que retorna uma Action )
+
+Ex 4:
+function fazerAlgo(param) {
+    /* logica */
+    return {
+        type: 'ALGUM_EVENTO_OCORREU',
+        payload: { /* ... */ }
+    }
+}
+
+Ex 5: payload retornando uma chamada http, neste caso, uma Promise
+function obterProdutos() {
+    /* logica */
+    return {
+        type: 'OBTER_PRODUTOS',
+        payload: axios.get('http://url)     // É possível retornar uma Promise
+    }
+}
+
+Para que isto funcione corretamente, tem que ter um Middleware para esperar a Promise ser resolvida, 
+para aí, ele entrar no Dispatch já com os dados obtidos do backend.
+
+# Anatomia do Estado - compartilhado na app -
+
+Um estado é apenas um objeto chave:valor, e ele é gerado a partir dos Reducers.
+
+Ex 6: Estado (no decorrer do programa poderão existir várias versões do estado)
+{
+    produtos: [ /* ... */ ],        // o valor pode ser um array, objeto, string, número, boolean
+    autenticacao: { /* ... */ }
+}
+
+Ex 6: Reducers
+{
+    produtos: function() {},
+    autenticacao: function() {}
+}
+
+Ex 7: Reducers (mais a fundo)
+{
+    produtos: function(estadoAnterior, acao) {
+        // logica
+        return proximoEstado
+    },
+    autenticacao: function(estadoAnterior, acao) {
+        // logica
+        return proximoEstado
+    },
+}
+
+Obs 1: como já foi mencionado, essas funcoes dos Reducers são funcoes puras, ou seja, elas não acessam
+backend da app, elas apenas com o estado anterior e a acao que foi gerada, evoluem para o próximo
+estado da app.
+
+Obs 2: o "estadoAnterior" passado para a funcao "produtos" é diferente do que foi passado para a funcao
+"autenticacao", porque recebe apenas o estado correspondente à tal função.
+
+Ex 8: Reducers colocados em arquivos.
+O que é comum, na realidade, é definir a função reducer num arquivo e exportá-lo, e então no estado,
+é chamado pelo seu import:
+
+// Reducers
+{
+    produtos: produtosReducer,              // *ficheiro 1
+    autenticacao: autenticacaoReducer       // *ficheiro 2
+}
+
+* fichero 1
+const reducer = (state, action) => {
+    // logica
+    return nextState
+}
+
+export default reducer
+
+* fichero 2
+const reducer = (state, action) => {
+    // logica
+    return nextState
+}
+
+export default reducer
+
+
+-------------------------------------------------------
 Anotações e links 
 -------------------------------------------------------
 
