@@ -2025,7 +2025,22 @@ O Decorator substitui a herança, ele usa a composição para que se possa acres
 Em JS é possível instanciar uma funcao para gerar um objeto.
 
 import { connect } from 'react-redux'
-O "connect" será o responsável por conectar o componente ao estado a app. 
+O "connect" será o responsável por conectar o componente ao estado a app.
+
+A partir desta aula, foi implementado o Redux na app "redux-simples-sem-redux", ao qual chamei agora de "redux-simples".
+
+
+-------------------------------------------------------
+Aula 96 - Adicionando Redux na App TodoApp 
+-------------------------------------------------------
+
+Copiei a pasta do todo-app e renomeei para todo-app-redux.
+Instalei no frontend as seguintes dependências:
+- npm i --save-dev redux@3.6.0 react-redux@5.0.2
+
+redux@3.6.0             Biblioteca do Redux
+react-redux@5.0.2       Biblioteca que faz a conexão do React com o Redux
+
 -------------------------------------------------------
 Anotações e links 
 -------------------------------------------------------
