@@ -4,19 +4,10 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-// Provider é um componente que integra o React com o Redux
-// Ele permitirá acessar o estado em toda a app
-import { Provider } from 'react-redux'
-import configStore from './store/storeConfig'
-
-const store = configStore()
-
 ReactDOM.render(
-  <Provider store={store}>
   <React.StrictMode>
     <App />
-  </React.StrictMode>
-  </Provider>,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

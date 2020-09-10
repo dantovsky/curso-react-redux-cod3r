@@ -1,0 +1,15 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* stretch já é o valor padrão, pelo que este atributo pode ser tirado */
+  text-align: center;
+}
+
+h1 {
+  font-weight: 200;
+  font-size: 36px;
+}
+
+.linha {
+  display: flex;
+}

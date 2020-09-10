@@ -1871,6 +1871,12 @@ O Redux tem a ideia de trazer os estados para um local centralizado.
 Middlewares no Redux
 Realiza opoerações com o objeto (dados) retornados pela função, antes de ser passado para o dispatch.
 
+# Como uma visão geral, o Redux tem o seguinte fluxo:
+
+A partir de um evento, é chamada uma função que pode receber parametros (Action Creator),
+e retorna um objeto (Action), e esse objeto é passado para várias funções (Reducers),
+e essas funções então geram o estado na versão mais atual.
+
 # Nomeclatura no Redux
 
 - Action Creator (lógica da funcao): é uma função síncrona que retorna uma Action.
@@ -2009,6 +2015,17 @@ const reducer = (state, action) => {
 export default reducer
 
 
+-------------------------------------------------------
+Aula 88 - Conectando Componentes com Redux
+-------------------------------------------------------
+
+Como integrar o Redux dentro de um componente?
+Padrão de projeto "Decorator".
+O Decorator substitui a herança, ele usa a composição para que se possa acrescentar coisas a um determinado0 objeto (uma funcao, por exemplo).
+Em JS é possível instanciar uma funcao para gerar um objeto.
+
+import { connect } from 'react-redux'
+O "connect" será o responsável por conectar o componente ao estado a app. 
 -------------------------------------------------------
 Anotações e links 
 -------------------------------------------------------
