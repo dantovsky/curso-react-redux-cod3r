@@ -1,7 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux' // Conecta esse componente com os dados que estão na store e com as Actios que serão disparadas
 import IconButton from '../template/iconButton'
 
-export default props => {
+const TodoList = props => {
 
     const renderRows = () => {
         const list = props.list || []
@@ -31,3 +32,9 @@ export default props => {
         </table>
     )
 }
+
+// Método que vai mapear o estado do Redux com as props do objeto
+const mapStateToProps = state => ({list: state.todo.list})
+
+// Exportar o componente decorado (padrão de projeto Decorator)
+export default connect(mapStateToProps)(TodoList)

@@ -1,14 +1,69 @@
-import React from 'react'
+import React, { Component } from 'react'
+
+// Imports para o Redux
+import { connect } from 'react-redux' // Conecta esse componente com os dados que estão na store e com as Actios que serão disparadas
+import { bindActionCreators } from 'redux'
+
 import Grid from '../template/grid'
 import IconButton from '../template/iconButton'
 
-export default props => {
+// Actions implementadas
+import { changeDescription, search } from './todoActions' // Faz o bind das Actions com o Dispatch
+
+class TodoForm extends Component {
+    constructor(props) {
+        super(props)
+        this.keyHandler = this.keyHandler.bind(this)
+    }
+
+    // Metodo que eh chamado sempre que o componente eh exibido
+    componentWillMount() {
+        this.props.search()
+    }
 
     // Atalhos do teclado
     // Enter            :: adiciona nova tarefa
     // Enter + Shift    :: pesquisa
     // Escape           :: clear
-    const keyHandler = e=>{
+    keyHandler(e) {
+        if (e.key === 'Enter') {
+            e.shiftKey ? this.props.handleSearch() : this.props.handleAdd()
+        } else if (e.key === 'Escape') {
+            this.props.handleClear()
+        }
+    }
+
+    render() {
+        return (
+            <div role='form' className='todoForm'>
+                <Grid cols='12 9 10'>
+                    <input id='description' className='form-control' placeholder='Adicione uma tarefa'
+                        onChange={this.props.changeDescription}
+                        onKeyUp={this.keyHandler}
+                        value={this.props.description} />
+                </Grid>
+                <Grid cols='12 3 2'>
+                    <IconButton style="primary" icon="plus" onClick={this.props.handleAdd}></IconButton>
+                    <IconButton style="info" icon="search" onClick={this.props.handleSearch}></IconButton>
+                    <IconButton style="default" icon="close" onClick={this.props.handleClear}></IconButton>
+                </Grid>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = state => ({ description: state.todo.description })
+const mapDispatchToProps = dispatch => bindActionCreators({ changeDescription, search }, dispatch)
+export default connect(mapStateToProps, mapDispatchToProps)(TodoForm)
+
+// --- ANOTACOES
+
+// O componente TodoForm no estilo funcional (antes de alterar para componente de classe):
+// Essa alteracao foi feita para que fosse possivel usar o metodo de ciclo de vida "componentWillMount()"
+
+/*
+const TodoForm = props => {
+    const keyHandler = e => {
         if (e.key === 'Enter') {
             e.shiftKey ? props.handleSearch() : props.handleAdd()
         } else if (e.key === 'Escape') {
@@ -19,7 +74,7 @@ export default props => {
         <div role='form' className='todoForm'>
             <Grid cols='12 9 10'>
                 <input id='description' className='form-control' placeholder='Adicione uma tarefa'
-                    onChange={props.handleChange}
+                    onChange={props.changeDescription}
                     onKeyUp={keyHandler}
                     value={props.description} />
             </Grid>
@@ -31,15 +86,16 @@ export default props => {
         </div>
     )
 }
+*/
 
-    // Divs antes de usar o componente Grid, para gerar as colunas Bootstrap automaticamente
-    // Button e icon antes de usar o componente IconButton
-    //
-    // < div className='col-xs-12 col-sm-9 col-md-10' >
-    //     <input id='description' className='form-control' placeholder='Adicione uma tarefa' />
-    //     </div >
-    // <div className='col-xs-12 col-sm-3 col-md-2'>
-    //     <button className='btn btn-primary'>
-    //         <i className='fa fa-plus'></i>
-    //     </button>
-    // </div>
+// Divs antes de usar o componente Grid, para gerar as colunas Bootstrap automaticamente
+// Button e icon antes de usar o componente IconButton
+//
+// < div className='col-xs-12 col-sm-9 col-md-10' >
+//     <input id='description' className='form-control' placeholder='Adicione uma tarefa' />
+//     </div >
+// <div className='col-xs-12 col-sm-3 col-md-2'>
+//     <button className='btn btn-primary'>
+//         <i className='fa fa-plus'></i>
+//     </button>
+// </div>

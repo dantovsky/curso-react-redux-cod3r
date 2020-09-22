@@ -2041,6 +2041,127 @@ Instalei no frontend as seguintes dependências:
 redux@3.6.0             Biblioteca do Redux
 react-redux@5.0.2       Biblioteca que faz a conexão do React com o Redux
 
+
+-------------------------------------------------------
+Aula 97 - Confiurando Reducers 
+-------------------------------------------------------
+
+// --- main/reducers.js
+
+import { combineReducers } from 'redux'
+
+// Reducer que vai combinar todos os outros
+const rootReducer = combineReducers({
+    todo: () => ({
+        description: 'Ler livro',
+        list: [{
+            _id: 1,
+            description: 'Pagar fatura do cartão',
+            done: true
+        }, {
+            _id: 2,
+            description: 'Reunião com a equipe às 10:00',
+            done: false
+        }, {
+            _id: 3,
+            description: 'Consulta médica na terça depois do almoço',
+            done: false
+        }]
+    })
+})
+
+// Este reducer será usado na config do index.js
+export default rootReducer
+
+
+-------------------------------------------------------
+Aula 98 - Confiurando o Redux
+-------------------------------------------------------
+
+// --- index.jsx
+
+import React from 'react'
+import ReactDom from 'react-dom' // Arquivo que interage com o DOM da página
+
+// Imports para o Redux
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+
+
+import App from './main/app'
+import reducers from './main/reducers' // Import dos reducers criados
+
+// Criação da store :: recebe o resultado do método createStore, passando os reducers como parâmetro
+// store => é o objeto estado da app, que será controlado pelo Redux
+const store = createStore(reducers)
+
+ReactDom.render(
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('app'))
+
+// Antes de aplicar o Redux
+// ReactDom.render(<App />, document.getElementById('app'))
+
+
+-------------------------------------------------------
+Aula 99 - Conectar o TodoList com Redux
+-------------------------------------------------------
+
+// --- todo/todoList.jsx
+
+import React from 'react'
+import { connect } from 'react-redux' // Conecta esse componente com os dados que estão na store e com as Actios que serão disparadas
+import IconButton from '../template/iconButton'
+
+const TodoList = props => {
+
+    const renderRows = () => {
+        const list = props.list || []
+        return list.map(todo => (
+            <tr key={todo._id}>
+                <td className={todo.done ? 'markedAsDone' : ''}>{todo.description}</td>
+                <td>
+                    <IconButton style='success' icon='check' onClick={() => props.handleMarkAsDone(todo)} hide={todo.done}></IconButton>
+                    <IconButton style='warning' icon='undo' onClick={() => props.handleMarkAsPending(todo)} hide={!todo.done}></IconButton>
+                    <IconButton style='danger' icon='trash-o' onClick={() => props.handleRemove(todo)} hide={!todo.done}></IconButton>
+                </td>
+            </tr>
+        ))
+    }
+
+    return (
+        <table className='table'>
+            <thead>
+                <tr>
+                    <th>Descrição</th>
+                    <th className='tableActions'>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {renderRows()}
+            </tbody>
+        </table>
+    )
+}
+
+// Método que vai mapear o estado do Redux com as props do objeto
+const mapStateToProps = state => ({list: state.todo.list})
+
+// Exportar o componente decorado (padrão de projeto Decorator)
+export default connect(mapStateToProps)(TodoList)
+
+
+-------------------------------------------------------
+Aula 104 - Aplicando Middleware (Redux-Promise)
+-------------------------------------------------------
+
+Middleware que vai ficar entre a chamada do Action Creator e o
+
+Instalar o middleware:
+- npm i --save-dev redux-promise@0.5.3
+
 -------------------------------------------------------
 Anotações e links 
 -------------------------------------------------------
