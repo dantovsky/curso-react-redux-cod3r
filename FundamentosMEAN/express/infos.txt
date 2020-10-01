@@ -1,0 +1,5 @@
+~ ~ ~ Express ~ ~ ~
+
+Middleware => uma função que recebe "request, response e next".
+
+Chain of Responsability => No contexto do Express é conhecido como Middleware.
