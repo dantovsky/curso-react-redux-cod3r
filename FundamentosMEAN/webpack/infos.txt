@@ -32,6 +32,43 @@ module.exports = {
 
 # Loaders utilizados no Webpack
 
-"mini-css-extract-plugin:": "0.4.0",      => extrair o CSS para um arquivo específico
-"css-loader": "0.28.11",
-"style-loader": "0.21.0",
+"file-loader"                             => Tratar os arquivos de imagens (ex: referencias a files no CSS): necessita criar uma "rule"
+"cross-env"                               => Serve para setar uma var de ambiente (nodeEnv) de uma única forma, pois a forma em Linux e Mac é diferente da forma para Windows
+"optimize-css-assets-webpack-plugin"      => CSS minifyer
+"uglifyjs-webpack-plugin"                 => JS minifyer (embora o padrão, sem este módulo, já faça minificação)
+"mini-css-extract-plugin:": "0.4.0",      => extrair o CSS para um arquivo específico (ele é conflitante com o 'style-loader')
+"css-loader": "0.28.11",                  => interpreta @import, url()...
+"style-loader": "0.21.0",                 => Adiciona CSS a DOM injetando a tag <style>
+"node-sass": "4.9.0",
+"sass-loader": "7.0.1",                   => usado no Webpack (depende do node-sass para funcionar)
+
+Copy:
+
+"devDependencies": {
+
+  "node-sass": "4.9.0",
+  "sass-loader": "7.0.1",
+  "mini-css-extract-plugin": "0.4.0",
+  "css-loader": "0.28.11",
+  "style-loader": "0.21.0",
+  "webpack": "4.8.1",
+  "webpack-cli": "2.1.3"
+}
+
+# Comandos para correr o Webpack
+
+- npm start         => iniciar no modo development
+- npm run build     => iniciar no modo production
+
+--------------------------------------------------------
+Ocorrências
+--------------------------------------------------------
+
+# Visual Code sempre pede "retry as admin"
+
+Visual Code sempre pede "retry as admin" quando tenta salvar um arquivo, tendo que inserir a senha de root todas as vezes.
+sudo chown -c -R $USER:$USER (project folder)
+Ex: na pasta onde tenho o projeto git fiz:
+sudo chown -c -R $USER:$USER .
+
+https://www.quora.com/Every-single-time-when-saving-my-code-in-visual-studio-code-on-Linux-I-have-to-type-in-my-password-retry-as-admin-How-can-I-bypass-that
