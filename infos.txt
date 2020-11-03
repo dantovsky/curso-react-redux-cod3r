@@ -1473,16 +1473,32 @@ Inicialização do projeto:
 Instalação do MongoDB
 -------------------------------------------------------
 
+Install Mongo
+- sudo apt install mongodb-server-core
+- sudo apt install mongodb-clients
+
 Após a instalação do MongoDB, deve existir a seguinte estrutura de pasta do diretório raiz:
 /data/db
 
 No caso do Linux, deverá dar permissão à pasta:
-sudo chmod -R go-w /data/db
+sudo chmod -R go+w /data/db
 
 Rodar o Mongo server (porta padrão é a 27017):
 sudo mongod 
 sudo mongod --port 27018
 
+Nota: existirá uma DB com o nome "todo" e ao rodar as operações no frontend, irá gerar uma collection chamada "todos" dentro da DB "todo".
+
+Mongo (comandos básicos) :: Rodar o Mongo Cli e pode verificar os registos com os comandos:
+- show dbs
+- show database
+- use <database_name>
+- show collections
+- db.todos.find().pretty()
+
+Criar DB e collection para inserir mock data:
+- use todo
+- db.todos.insertOne({description: "Minha tarefa", done: false, createdAt: new Date()})
 
 -------------------------------------------------------
 Aula 56 - TodoApp - Config do frontend 
@@ -2161,6 +2177,65 @@ Middleware que vai ficar entre a chamada do Action Creator e o
 
 Instalar o middleware:
 - npm i --save-dev redux-promise@0.5.3
+
+
+-------------------------------------------------------
+Aula 107 - Middleware (Redux-Multi)
+-------------------------------------------------------
+
+Permite que um action creator retorne um array com várias actions.
+
+Installarion
+- npm i --save-dev redux-multi@0.1.12
+
+// --- index.js
+
+// novo import
+import multi from 'redux-multi'
+
+// adicionado novo middleware na lista de middlewares para aplicar
+const store = applyMiddleware(multi, promise)(createStore)(reducers, devTools)
+
+// --- todo/todoActions.js
+
+// return devolvendo um array de ações
+
+export const add = (description) => {
+    const request = axios.post(URL, { description })
+    return [
+        { type: 'TOOD_ADDED', payload: request },
+        search()
+    ]
+}
+
+
+-------------------------------------------------------
+Aula 108 - Middleware (Redux-Thunk)
+-------------------------------------------------------
+
+Para garantir que a action search() só seja chamada após ter inserido a nova tarefa (ou seja, depois de ter feito o requeste.post(URL, { description })).
+
+Installation do middleware
+- npm i --save-dev redux-thunk@2.2.0
+
+// --- index.js
+
+import thunk from 'redux-thunk'
+const store = applyMiddleware(thunk, multi, promise)(createStore)(reducers, devTools)
+
+// --- todo/todoActions.js
+
+// return devolvendo um método que vai receber como param, o dispatch, com o axios utilizando then() para ter um processo síncrono de espera para cada resposta
+
+export const add = (description) => {
+    // Retornando um método que vai receber como param, o dispatch
+    // Dispatch é quem envia a action para todos os reducers
+    return dispatch => {
+        axios.post(URL, { description })
+            .then(resp => dispatch({type: 'TODO_ADDED', payload: resp.data}))
+            .then(resp => dispatch(search()))
+    }
+}
 
 -------------------------------------------------------
 Anotações e links 
