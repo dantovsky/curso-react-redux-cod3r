@@ -6,6 +6,8 @@ import React from 'react'
 import Menu from '../template/menu'
 import Routes from './routes'
 
+// Portas :: backend: 3003, frontend: 8080
+
 export default props => (
     <div className="container">
         <Menu />

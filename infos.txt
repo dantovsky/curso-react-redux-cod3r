@@ -2214,6 +2214,9 @@ Aula 108 - Middleware (Redux-Thunk)
 -------------------------------------------------------
 
 Para garantir que a action search() só seja chamada após ter inserido a nova tarefa (ou seja, depois de ter feito o requeste.post(URL, { description })).
+Com o thunk podemos utilizar o dispatch de forma manual, chamando-o exatamente onde quisermos.
+
+O "multi" chama várias ações ao mesmo tempo, mas com o "thunk" cada ação espera a ação anterior ser finalizada.
 
 Installation do middleware
 - npm i --save-dev redux-thunk@2.2.0

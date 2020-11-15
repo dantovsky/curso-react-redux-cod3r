@@ -16,7 +16,7 @@ const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_
 
 // Criação da store :: recebe o resultado do método createStore, passando os reducers como parâmetro
 // store => é o objeto estado da app, que será controlado pelo Redux
-const store = applyMiddleware(thunk, multi, promise)(createStore)(reducers, devTools)
+const store = applyMiddleware(thunk, multi, promise)(createStore)(reducers, devTools) // Nao esta usando o promise em nenhuma action (em nenhum lugar)
 
 ReactDom.render(
     <Provider store={store}>
