@@ -9,16 +9,6 @@ BillingCycle.methods(['get', 'post', 'put', 'delete'])
 BillingCycle.updateOptions({ new: true, runValidators: true }) // Options :: ""new" => detornar obj novo ao fazer update (PUT), "runValidators" => validar o Schema também ao fazer PUT, e não somente em POST
 BillingCycle.after('post', errorHandler).after('put', errorHandler) // aula 124 - Momento em que se quer utilizar o Middleware de errorHanlder
 
-// BillingCycle.route('get', (req, res, next) => {
-//     BillingCycle.find({}, (err, docs) => {
-//         if (!err) {
-//             res.json(docs)
-//         } else {
-//             res.status(500).json({ errors: [error] })
-//         }
-//     })
-// })
-
 BillingCycle.route('get', (req, res, next) => {
     BillingCycle.find({}, (err, docs) => {
         if (!err) {
@@ -60,7 +50,5 @@ BillingCycle.route('summary', (req, res, next) => {
         }
     })
 })
-
-// 
 
 module.exports = BillingCycle
