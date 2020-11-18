@@ -138,4 +138,83 @@ JSON Response (se inserção com sucesso)
 }
 ```
 
-PUT :: http://localhost:3004/api/billinCycles/:id (adicionar o _id como parametro tab "Params")
+PUT :: http://localhost:3004/api/billinCycles/:id (adicionar o _id como parametro na tab "Params", do Postman)
+
+### Seção 9: Aplicação Final - Ciclos de Pagamentos (Frontend)
+
+#### Componentes da App
+
+![Ciclo de Pagamentos (Frontend)](my-money-app-componentes.png "Ciclo de Pagamentos (Frontend)")
+
+#### Organização hierárquica dos componentes do sistema
+
+O componente Index é o que colocamos como referẽncia na config do Webpack.
+
+![Ciclo de Pagamentos - Hierarquia de componentes](my-money-app-componentes-hierarquia.png "Ciclo de Pagamentos - Hierarquia de componentes")
+
+#### Instalação do frontend React e libs necessárias
+
+```c
+npm init -y
+npm i --save-dev webpack@1.14.0 webpack-dev-server@1.16.2 -E
+npm i --save-dev babel-core@6.22.1 babel-loader@6.2.10 babel-plugin-react-html-attrs@2.0.0 babel-plugin-transform-object-rest-spread@6.22.0 babel-preset-es2015@6.22.0 babel-preset-react@6.22.0 -E
+npm i --save-dev extract-text-webpack-plugin@1.0.1 css-loader@0.26.1 style-loader@0.13.1 file-loader@0.9.0 -E
+npm i --save-dev admin-lte@2.3.6 font-awesome@4.7.0 ionicons@3.0.0 -E
+npm i --save-dev react@15.4.2 react-dom@15.4.2 react-router@3.0.2 redux@3.6.0 react-redux@4.4.6 redux-form@6.4.1 redux-multi@0.1.12 redux-promise@0.5.3 redux-thunk@2.1.0 react-redux-toastr@4.4.2 axios@0.15.3 lodash@4.17.4 -E
+```
+
+Além de colocar a versão fixa no comando, a flag -E garante que será instalada a versão exata.
+
+#### Config do Webpack
+
+```js
+// Config que vai ser interpretada pelo Webpack
+const webpack = require('webpack') // Import no padrão Commons JS
+const ExtractTextPlugin = require('extract-text-webpack-plugin') // Responsável por extrair os files CSS e aplicar o processo com Style Loader e CSS Loader
+
+module.exports = {
+    entry: './src/index.jsx',
+    output: {
+        path: __dirname + '/public',
+        filename: './app.js'
+    },
+    devServer: {
+        port: 8080,
+        contentBase: './public'
+    },
+    resolve: {
+        extensions: ['', '.js', '.jsx'],
+        alias: {
+            modules: __dirname + '/node_modules',
+            jquery: 'modules/admin-lte/plugins/jQuery/jquery-2.2.3.min.js',
+            bootstrap: 'modules/admin-lte/bootstrap/js/bootstrap.js'
+        }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({ // Deixar o jQuery disponivel
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.jQuery': 'jquery'
+        }),
+        new ExtractTextPlugin('app.css') // Classe CSS que vai gerar
+    ],
+    module: {
+        loaders: [{
+            test: /.js[x]?$/, // Arquivos JavaScript
+            loader: 'babel-loader',
+            exclude: '/node_modules',
+            query: {
+                presets: ['es2015', 'react'], // Presets para passar pelos arquivos JS e JSX da app
+                plugins: ['transform-object-rest-spread'] // Plugin que transforma os operadores spread da app, para fazer o transpile para a versão antiga do JS corretamente
+            }
+        }, {
+            test: /\.css$/,
+            loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+        }, {
+            test: /\.woff|.woff2|.ttf|eot|.svg|.png|.jpg*.*$/,
+            loader: 'file'
+        }]
+    }
+}
+```
+
