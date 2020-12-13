@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import DashboardReducer from '../dashboard/dashboardReducer'
+import TabReducer from "../common/tab/tabReducer";
 
 /**
  * Este módulo combina todos os Reducers da app
@@ -12,7 +13,8 @@ const rootReducers = combineReducers({
     // 1. o próprio estado (a store)
     // 2. a ação (action que foi disparada para que o reducer fosse chamado) 
     // dashboard: () => ({ summary: { credit: 100, debt: 50 } })
-    dashboard: DashboardReducer
+    dashboard: DashboardReducer,
+    tab: TabReducer
 })
 
 export default rootReducers

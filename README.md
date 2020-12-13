@@ -221,3 +221,48 @@ module.exports = {
 
 ![Redux Life-Cycle with Middlewares](redux-life-cycle-with-middlewares.jpg "Redux Life-Cycle with Middlewares")
 
+#### Visão geral dos com componentes de abas
+
+Componentes dentro do componente BillingCycles
+![Componentes dentro do componente BillingCycles](my-money-app-abas-componentes.png "Componentes dentro do componente BillingCycles")
+
+Diagrama de herarquia dos componentes de abas
+![Diagrama de herarquia dos componentes de abas](my-money-app-abas-hierarquia.png "Diagrama de herarquia dos componentes de abas")
+
+Código do BillinCycles com os componentes de abas
+```jsx
+import React, { Component } from 'react'
+
+import ContentHeader from '../common/template/contentHeader';
+import Content from '../common/template/content';
+import Tabs from '../common/tab/tabs';
+import TabsHeader from '../common/tab/tabsHeader';
+import TabsContent from '../common/tab/tabsContent';
+import TabHeader from '../common/tab/tabHeader';
+
+class BillingCycle extends Component {
+    render() {
+        return (
+            <div>
+                <ContentHeader title="Ciclos de Pagamentos" small="cadastro" />
+                <Content>
+                    <Tabs>
+                        <TabsHeader>
+                            <TabHeader label="Listar" icon="bars" target="tabList" />
+                            <TabHeader label="Incluir" icon="plus" target="tabCreate" />
+                            <TabHeader label="Alterar" icon="pencil" target="tabUpdate" />
+                            <TabHeader label="Excluir" icon="trash-o" target="tabDelete" />
+                        </TabsHeader>
+                        <TabsContent>
+                            <p>...</p>
+                        </TabsContent>
+                    </Tabs>
+                </Content>
+            </div>
+        );
+    }
+}
+
+export default BillingCycle;
+
+```
