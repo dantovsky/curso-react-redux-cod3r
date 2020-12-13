@@ -217,4 +217,7 @@ module.exports = {
     }
 }
 ```
+#### Redux Life-Cycle with Middlewares
+
+![Redux Life-Cycle with Middlewares](redux-life-cycle-with-middlewares.jpg "Redux Life-Cycle with Middlewares")
 

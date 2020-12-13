@@ -2241,29 +2241,70 @@ export const add = (description) => {
 }
 
 -------------------------------------------------------
-Aula 153 - Adicionando Redux na App MyMoneyApp 
+Aula 153 - Adicionando Redux na App MyMoneyApp frontend
 -------------------------------------------------------
+
 
 // --- main/reducers.js
 
+
 import { combineReducers } from 'redux'
+import DashboardReducer from '../dashboard/dashboardReducer'
 
 const rootReducers = combineReducers({
-    dashboard: () => ({ summary: { credito: 100, debt: 50 } })
+    // dashboard: () => ({ summary: { credit: 100, debt: 50 } })
+    dashboard: DashboardReducer
 })
 export default rootReducers
 
 
+// --- dashboard/dashboardReducers.js
+
+
+const INITIAL_STATE = {summary: {credit: 1000, debt: 0}}
+
+export default function (state = INITIAL_STATE, action) {
+    switch (action.type) {
+        case 'BILLING_SUMMARY_FETCHED':
+            return { ...state, summary: action.payload.data }    
+        default:
+            return state
+    }
+}
+
+
+// --- dashboard/dashboardActions.js
+
+
+import axios from 'axios'
+const BASE_URL = 'http://localhost:3003/api'
+
+// Action Creator
+export function getSummary() {
+    const request = axios.get(`${BASE_URL}/billingCycles/summary`)
+    return {
+        type: 'BILLING_SUMMARY_FETCHED',
+        payload: request
+    }
+}
+
+
 // --- index.js
+
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { createStore } from "redux"; // for Redux
+import { applyMiddleware, createStore } from "redux"; // for Redux
 import { Provider } from "react-redux"; // for Redux (envolve a tag App)
+
+import promise from 'redux-promise' // for Redux
+
 import App from "./main/app";
 import reducers from "./main/reducers"; // for Redux
 
-const store = createStore(reducers); // for Redux
+// Definicao da store, passando os reducers para o método createStore()
+// const store = createStore(reducers); // for Redux
+const store = applyMiddleware(promise)(createStore)(reducers); // for Redux
 ReactDOM.render(
   <Provider store={store}>
     <App />
@@ -2272,8 +2313,48 @@ ReactDOM.render(
 );
 
 
-// --- main/reducers.js
+// --- dashboard/dashboard.js
 
+
+import React, { Component } from "react";
+
+// Imports for integrate this component with Redux management state
+import { connect } from 'react-redux'; // (step 1) <---
+import { bindActionCreators } from 'redux'; // (step 5) <--- Ligar este componente com a Action Creators
+
+import { getSummary } from './dashboardActions' // (step 6) <--- Action Creator implementada
+import ContentHeader from "../common/template/contentHeader";
+import Content from "../common/template/content";
+import ValueBox from "../common/widget/valueBox";
+import Row from "../common/layout/row";
+
+class Dashboard extends Component {
+
+    componentWillMount() {
+        this.props.getSummary()
+    }
+
+    render() {
+        // Destructoring para extratir as duas variáveis "credit" e "debt"
+        const { credit, debt } = this.props.summary // (step 4) <---
+        return (
+            <div>
+                <ContentHeader title="Dashboard" small="Versão 1.0" />
+                <Content>
+                    <Row>
+                        <ValueBox cols="12 4" color="green" icon="bank" value={`${credit}`} text="Total de Créditos" />
+                        <ValueBox cols="12 4" color="red" icon="credit-card" value={`${debt}`} text="Total de Déditos" />
+                        <ValueBox cols="12 4" color="blue" icon="money" value={`${credit - debt}`} text="Valor Consolidado" />
+                    </Row>
+                </Content>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = state => ({summary: state.dashboard.summary}) // (step 2) <---
+const mapDispatchToProps = dispatch => bindActionCreators({getSummary}, dispatch) // (step 7) <---
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard) // (step 3, 8) <---
 
 
 -------------------------------------------------------
