@@ -10,5 +10,5 @@ module.exports = function(server) {
 
     // Rotas do Ciclo de Pagamento | Método de regitrar do Node-Restful que faz o mapeamento das URLs
     const BillingCycle = require('../api/billingCycle/billingCycleService')
-    BillingCycle.register(router, '/billinCycles') // Crirou todos os webservices mencionados em billingCycleService.js: ['get', 'post', 'put', 'delete']
+    BillingCycle.register(router, '/billingCycles') // Crirou todos os webservices mencionados em billingCycleService.js: ['get', 'post', 'put', 'delete']
 }

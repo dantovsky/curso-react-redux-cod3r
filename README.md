@@ -266,3 +266,7 @@ class BillingCycle extends Component {
 export default BillingCycle;
 
 ```
+
+#### BillinCycle List Redux Life-cycle
+
+![BillinCycle List Redux Life-cycle](my-money-app-billingcycle-list-redux.png "BillinCycle List Redux Life-cycle")

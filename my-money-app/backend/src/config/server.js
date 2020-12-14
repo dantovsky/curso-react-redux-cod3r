@@ -1,4 +1,4 @@
-const port = 3004
+const port = 3003
 
 const bodyParser = require('body-parser') // Faz o parser o corpo da requisicao para entregar o objeto pronto
 const express = require('express') // Required do Node (padrão Commons JS -> modularização no Node) Singleton do Express
