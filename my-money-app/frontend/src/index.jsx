@@ -7,7 +7,8 @@ import promise from 'redux-promise' // for Redux
 import multi from 'redux-multi'
 import thunk from 'redux-thunk'
 
-import App from "./main/app";
+// import App from "./main/app";
+import Routes from "./main/routes";
 import reducers from "./main/reducers"; // for Redux
 
 // Config para funcionar o DevTools do Redux no Chrome
@@ -19,7 +20,8 @@ const devTools = window.__REDUX_DEVTOOLS_EXTENSION__
 const store = applyMiddleware(multi, thunk, promise)(createStore)(reducers, devTools); // for Redux
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    {/* <App /> */}
+    <Routes />
   </Provider>,
   document.getElementById("app")
 );
