@@ -12,11 +12,13 @@ class BillingCycleForm extends Component {
 
     // Usando Map Reduce
     calculateSummary() {
+
+        console.log('this.props.credits: ', this.props.credits)
         // t: acumulardor, v: valor atual
         const sum = (t, v) => t + v
         return {
-            sumOfCredits: this.props.credits.map(c => +c.value || 0).reduce(sum),
-            sumOfDebts: this.props.debts.map(d => +d.value || 0).reduce(sum)
+            sumOfCredits: this.props.credits.length > 0 ? this.props.credits.map(c => +c.value || 0).reduce(sum) : [],
+            sumOfDebts: this.props.debts.length > 0 ? this.props.debts.map(d => +d.value || 0).reduce(sum) : []
         }
     }
     
