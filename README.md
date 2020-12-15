@@ -270,3 +270,16 @@ export default BillingCycle;
 #### BillinCycle List Redux Life-cycle
 
 ![BillinCycle List Redux Life-cycle](my-money-app-billingcycle-list-redux.png "BillinCycle List Redux Life-cycle")
+
+#### Utilização do Redux Form
+
+Redux Form  
+https://redux-form.com/
+
+Na app My Money App foi utilizado o Action Creators do Redux Form. Segue alguns dos métodos utilizados:
+
+- reset()  
+https://redux-form.com/8.3.0/docs/api/actioncreators.md/#-code-reset-form-string-code-
+- initialize()  
+https://redux-form.com/8.3.0/docs/api/actioncreators.md/#-code-initialize-form-string-data-object-keepdirty-boolean-options-keepdirty-boolean-keepsubmitsucceeded-boolean-updateunregisteredfields-boolean-keepvalues-boolean-code-
+
