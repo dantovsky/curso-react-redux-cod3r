@@ -283,3 +283,8 @@ https://redux-form.com/8.3.0/docs/api/actioncreators.md/#-code-reset-form-string
 - initialize()  
 https://redux-form.com/8.3.0/docs/api/actioncreators.md/#-code-initialize-form-string-data-object-keepdirty-boolean-options-keepdirty-boolean-keepsubmitsucceeded-boolean-updateunregisteredfields-boolean-keepvalues-boolean-code-
 
+- arrayInsert(form:String, field:String, index:Number, value:any)  
+https://redux-form.com/8.3.0/docs/api/actioncreators.md/#-code-arrayinsert-form-string-field-string-index-number-value-any-code-
+
+- arrayRemove(form:String, field:String, index:Number)  
+https://redux-form.com/8.3.0/docs/api/actioncreators.md/#-code-arrayremove-form-string-field-string-index-number-code-

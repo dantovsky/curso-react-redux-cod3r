@@ -4,7 +4,7 @@ import { initialize, reset as resetForm } from 'redux-form' // Action Creators d
 import { showTabs, selectTab } from '../common/tab/tabActions'
 
 const BASE_URL = 'http://localhost:3003/api'
-const INITIAL_VALUES = {}
+const INITIAL_VALUES = {credits: [{}]}
 
 // Action Creator
 export function getList() {
